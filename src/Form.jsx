@@ -22,15 +22,12 @@ function Form() {
     const errors = {};
     if (!email || !email.includes('@')) {
         errors.email = 'Invalid email. Please check your email address.';
-        alert(errors.email)
     }
-    else if (!phoneNumber || phoneNumber.length !== 10) {
+    if (!phoneNumber || phoneNumber.length !== 10) {
         errors.phoneNumber = 'Invalid phone number. Please enter a 10-digit phone number.';
-        alert( errors.phoneNumber);
     }
-    else if (!dob || new Date(dob) > new Date()) {
+    if (!dob || new Date(dob) >= new Date()) {
         errors.dob = 'Invalid date of birth. Please enter a past date.';
-        alert(errors.dob);
     }
     if (Object.keys(errors).length === 0) {
       alert('Form submitted successfully!');
@@ -38,18 +35,18 @@ function Form() {
       setEmail('');
       setPhoneNumber('');
       setDob('');
+      closeModal();
     } else {
       setErrors(errors);
     }
   };
 
   const handleClickOutside = (e) => {
-    const modalContent = document.querySelector(`.${'modalContent'}`);
+    const modalContent = document.querySelector('.modal-content');
     if (modalContent && !modalContent.contains(e.target)) {
       closeModal();
     }
   };
-  
 
   return (
     <div className={isOpen ? 'modalOpen' : ''}>
@@ -78,8 +75,9 @@ function Form() {
                     onChange={(e) => setEmail(e.target.value)}
                     className='inputField'
                     type="email"
-                   
+                    required
                   />
+                  {errors.email && <p className="error">{errors.email}</p>}
                   <h4>Phone Number:</h4>
                   <input
                     id="phone"
@@ -87,7 +85,9 @@ function Form() {
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     className='inputField'
                     type="text"
+                    required
                   />
+                  {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
                   <h4>Date of Birth:</h4>
                   <input
                     id="dob"
@@ -95,7 +95,9 @@ function Form() {
                     onChange={(e) => setDob(e.target.value)}
                     className='inputField'
                     type="date"
+                    required
                   />
+                  {errors.dob && <p className="error">{errors.dob}</p>}
                   <button className='submit-button' type="submit">
                     Submit
                   </button>
