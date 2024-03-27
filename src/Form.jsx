@@ -42,7 +42,7 @@ function Form() {
   };
 
   const handleClickOutside = (e) => {
-    const modalContent = document.querySelector('.modal-content');
+    const modalContent = document.querySelector('.inputContainer');
     if (modalContent && !modalContent.contains(e.target)) {
       closeModal();
     }
@@ -55,10 +55,10 @@ function Form() {
         <button className='openForm' onClick={openModal}>Open Form</button>
         {isOpen && (
           <div className='modal' onClick={handleClickOutside}>
-            <div className='modal-content'>
+            <div className='inputContainer'>
               <h1>Fill Details</h1>
               <form onSubmit={handleSubmit}>
-                <div className='inputContainer'>
+                <div className='modal-content'>
                   <h4>Username:</h4>
                   <input
                     id="username"
