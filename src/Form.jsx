@@ -21,13 +21,13 @@ function Form() {
     e.preventDefault();
     const errors = {};
     if (!email || !email.includes('@')) {
-        errors.email = 'Invalid email. Please check your email address.';
+        errors.email = 'Invalid email';
     }
     if (!phoneNumber || phoneNumber.length !== 10) {
-        errors.phoneNumber = 'Invalid phone number. Please enter a 10-digit phone number.';
+        errors.phoneNumber = 'Invalid phone number';
     }
     if (!dob || new Date(dob) >= new Date()) {
-        errors.dob = 'Invalid date of birth. Please enter a past date.';
+        errors.dob = 'Invalid date of birth';
     }
     if (Object.keys(errors).length === 0) {
       alert('Form submitted successfully!');
