@@ -1,112 +1,100 @@
-import React, { useState } from 'react';
-import './Form.css';
+import { useState, useRef } from "react";
+import "./Form.css";
 
-function Form() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [dob, setDob] = useState('');
-  const [errors, setErrors] = useState({});
+const App = () => {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const usernameRef = useRef(null);
+  const emailRef = useRef(null);
+  const phoneRef = useRef(null);
+  const dobRef = useRef(null);
+  const formRef = useRef(null);
 
-  const openModal = () => {
-    setIsOpen(true);
+  const openForm = () => {
+    setIsFormOpen(true);
   };
 
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const errors = {};
-    // Remove email validation logic to allow invalid emails for testing
-    if (!phoneNumber || phoneNumber.length !== 10) {
-      errors.phoneNumber = 'Invalid phone number';
-    }
-    if (!dob || new Date(dob) >= new Date()) {
-      errors.dob = 'Invalid date of birth';
-    }
-    if (Object.keys(errors).length === 0) {
-      alert('Form submitted successfully!');
-      setUsername('');
-      setEmail('');
-      setPhoneNumber('');
-      setDob('');
-      closeModal();
-    } else {
-      setErrors(errors);
-    }
+  const closeForm = () => {
+    setIsFormOpen(false);
   };
 
   const handleClickOutside = (e) => {
-    const modalContent = document.querySelector('.inputContainer');
-    if (modalContent && !modalContent.contains(e.target)) {
-      closeModal();
+    if (formRef.current && !formRef.current.contains(e.target)) {
+      closeForm();
     }
+
+    // if(e.target.className == 'modal') {
+    //   closeForm();
+    // }
+  };
+
+  const handleSubmit = (e) => {
+    const username = usernameRef.current.value;
+    const email = emailRef.current.value;
+    const phone = phoneRef.current.value;
+    const dob = dobRef.current.value;
+
+    if (!email.includes("@")) {
+      alert("Invalid email");
+      return;
+    }
+
+    if (phone.length !== 10 || isNaN(phone)) {
+      alert("Invalid phone number");
+      return;
+    }
+
+    const currentDate = new Date();
+    const inputDate = new Date(dob);
+
+    if (inputDate > currentDate) {
+      alert("Invalid date of birth");
+      return;
+    }
+
+    // Handle successful form submission here
+    e.preventDefault();
+    // Close the form after submission
+    closeForm();
   };
 
   return (
-    <div className={isOpen ? 'modalOpen' : ''}>
-      <div className='App'>
-        <h1>User Details Modal</h1>
-        <button className='openForm' onClick={openModal}>Open Form</button>
-        {isOpen && (
-          <div className='modal' onClick={handleClickOutside}>
-            <div className='inputContainer'>
-              <h1>Fill Details</h1>
-              <form onSubmit={handleSubmit}>
-                <div className='modal-content'>
-                  <h4>Username:</h4>
-                  <input
-                    id="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className='inputField'
-                    type="text"
-                    required
-                  />
-                  <h4>Email Address:</h4>
-                  <input
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className='inputField'
-                    type="email"
-                    required
-                  />
-                  {errors.email && <p className="error">{errors.email}</p>}
-                  <h4>Phone Number:</h4>
-                  <input
-                    id="phone"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    className='inputField'
-                    type="text"
-                    required
-                  />
-                  {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
-                  <h4>Date of Birth:</h4>
-                  <input
-                    id="dob"
-                    value={dob}
-                    onChange={(e) => setDob(e.target.value)}
-                    className='inputField'
-                    type="date"
-                    required
-                  />
-                  {errors.dob && <p className="error">{errors.dob}</p>}
-                  <button className='submit-button' type="submit">
-                    Submit
-                  </button>
-                </div>
-              </form>
-            </div>
+    <div className={`app ${isFormOpen ? "dimmed" : ""}`}  onClick={handleClickOutside}>
+      <header>User Details Modal</header>
+      <button className="submit-button" onClick={openForm}>
+        Open Form
+      </button>
+
+      {isFormOpen && (
+        <div className="modal" onClick={handleClickOutside}>
+          <div className="modal-content" ref={formRef}>
+            <form>
+              <h2>Fill Details</h2>
+              <label htmlFor="username">Username:</label>
+              <input type="text" id="username" ref={usernameRef} required />
+
+              <label htmlFor="email">Email:</label>
+              <input type="email" id="email" ref={emailRef} required />
+
+              <label htmlFor="phone">Phone Number:</label>
+              <input type="tel" id="phone" ref={phoneRef} required />
+
+              <label htmlFor="dob">Date of Birth:</label>
+              <input type="date" id="dob" ref={dobRef} required />
+
+              <button
+                type="button"
+                className="submit-button"
+                onClick={handleSubmit}
+              >
+                Submit
+              </button>
+              {/* <div className="submitBtn-div"></div> */}
+            </form>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default Form;
+export default App;
